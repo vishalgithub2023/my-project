@@ -43,6 +43,7 @@ func (uc *UserController) AddUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) GetUsers(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("check new branch")
 	fmt.Println("Get user called")
 	ss := []models.User{}
 	s := models.User{}
