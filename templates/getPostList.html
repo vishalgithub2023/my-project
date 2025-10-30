@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>post-list</title>
+</head>
+
+<body>
+    {{ define "content" }}
+    <h2>All Posts</h2>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User_Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+            <tr>
+                <td>{{.Id}}</td>
+                <td>{{.User_Id}}</td>
+                <td>{{.Title}}</td>
+                <td>{{.Content}}</td>
+                <td>
+                    <button>Delete</button>
+                    <button>Edit</button>
+                </td>
+
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    {{end}}
+</body>
+
+</html>

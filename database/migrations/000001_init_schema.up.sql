@@ -6,3 +6,5 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   phone VARCHAR(20)
 );
+
+ALTER TABLE users ADD UNIQUE (email);
