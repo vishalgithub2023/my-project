@@ -33,8 +33,12 @@
                 <td>{{.Phone}}</td>
                 <td>
                     <form action="/delete/user/{{.Id}}" method="POST" style="display:inline;">
-                        <button type="submit"
-                            onclick="return confirm('Want to delete this user?');">Delete</button>
+                        <button type="submit" onclick="return confirm('Want to delete this user?');">Delete</button>
+                    </form>
+                    <form action="/update/user/{{.Id}}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Want to edit this user?');">
+                            Edit
+                        </button>
                     </form>
                 </td>
             </tr>

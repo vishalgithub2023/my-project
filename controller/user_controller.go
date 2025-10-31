@@ -159,8 +159,8 @@ func (uc *UserController) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	var s models.User
-	if err := json.NewDecoder(r.Body).Decode(&s); err != nil {
+	var user models.User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
@@ -173,7 +173,7 @@ func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = uc.DB.Exec("UPDATE users SET name=?, email=?, username=?, password=?, phone=? WHERE id=?",
-		s.Name, s.Email, s.Username, s.Password, s.Phone, id)
+		user.Name, user.Email, user.Username, user.Password, user.Phone, id)
 	if err != nil {
 		http.Error(w, "Failed to update user", http.StatusInternalServerError)
 		return
@@ -182,6 +182,47 @@ func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(`{"message": "record updated"}`))
 }
+
+// func (uc *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
+// 	id := mux.Vars(r)["id"]
+
+// 	if r.Method == http.MethodGet {
+// 		// get data from db
+// 		var user models.User
+// 		err := uc.DB.QueryRow("SELECT id, name, email, username, phone FROM users WHERE id = ?", id).
+// 			Scan(&user.Id, &user.Name, &user.Email, &user.Username, &user.Phone)
+// 		if err != nil {
+// 			http.Error(w, "User not found", http.StatusNotFound)
+// 			return
+// 		}
+
+// 		tmpl := template.Must(template.ParseFiles("templates/updateUser.html"))
+// 		tmpl.Execute(w, user)
+// 		return
+// 	}
+
+// 	// For POST request – Update user data
+// 	if err := r.ParseForm(); err != nil {
+// 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	name := r.FormValue("name")
+// 	email := r.FormValue("email")
+// 	username := r.FormValue("username")
+// 	phone := r.FormValue("phone")
+
+// 	_, err := uc.DB.Exec(`UPDATE users
+// 		SET name=?, email=?, username=?, phone=?
+// 		WHERE id=?`, name, email, username, phone, id)
+
+// 	if err != nil {
+// 		http.Error(w, "Failed to update user", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	http.Redirect(w, r, "/get_all_users", http.StatusSeeOther)
+// }
 
 func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
