@@ -1,13 +1,15 @@
-package http
+package api
 
 import (
 	"database/sql"
-	"project/controller"
+	controller "project/internal/handlers"
+
+	// "project/controller"
 
 	"github.com/gorilla/mux"
 )
 
-func RegisterUserRoutes(r *mux.Router, db *sql.DB) {
+func RegisterRoutes(r *mux.Router, db *sql.DB) {
 
 	userController := controller.NewUserController(db)
 
@@ -16,7 +18,9 @@ func RegisterUserRoutes(r *mux.Router, db *sql.DB) {
 	r.HandleFunc("/login", userController.LoginHandler).Methods("GET", "POST")
 	r.HandleFunc("/logout", userController.LogoutHandler).Methods("POST")
 
+	r.HandleFunc("/Check", userController.CheckApi).Methods("GET", "POST")
 	r.HandleFunc("/add_user", userController.AddUser).Methods("POST", "GET")
+
 	r.HandleFunc("/get_all_users", userController.GetUsers).Methods("GET")
 
 	// User Routes

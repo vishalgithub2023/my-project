@@ -7,7 +7,8 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"project/models"
+	"project/internal/models"
+	"project/pkg/utils"
 	"regexp"
 	"strconv"
 	"strings"
@@ -52,6 +53,61 @@ func (uc *UserController) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc
 
 		next.ServeHTTP(w, r)
 	}
+}
+
+// login handler
+func (uc *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		tmpl := template.Must(template.ParseFiles("templates/login.html"))
+		tmpl.Execute(w, nil)
+		return
+	}
+
+	// Parse form
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+
+	var storedUser models.User
+	err := uc.DB.QueryRow("SELECT id, email, password FROM users WHERE email = ?", email).
+		Scan(&storedUser.Id, &storedUser.Email, &storedUser.Password)
+	if err != nil {
+		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
+		return
+	}
+
+	// Compare passwords
+	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(password))
+	if err != nil {
+		http.Error(w, "Password not match", http.StatusUnauthorized)
+		return
+	}
+	// token
+	token, err := utils.CreateToken(storedUser.Email)
+	if err != nil {
+		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+		return
+	}
+
+	// Store token
+	http.SetCookie(w, &http.Cookie{
+		Name:     "user_token",
+		Value:    token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		MaxAge:   86400,
+	})
+
+	//  Login successful
+	fmt.Println("Login successful for:", storedUser.Email)
+
+	// Redirect
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (uc *UserController) LogoutHandler(w http.ResponseWriter, r *http.Request) {
@@ -346,4 +402,15 @@ func (uc *UserController) GetHtmlData(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, nil)
 
+}
+
+func (uc *UserController) CheckApi(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	data := map[string]string{
+		"message": "API is working fine!",
+		"status":  "success",
+	}
+
+	json.NewEncoder(w).Encode(data)
 }
