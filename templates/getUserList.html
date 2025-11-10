@@ -5,46 +5,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
     {{ define "content" }}
-    <h2>All Users List</h2>
+    <b class="text-2xl">All Users List</b>
 
-    <table border="1" cellpadding="10">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Username</th>
-                <th>Phone</th>
-                <th>Action</th>
+    <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+        <table id="example" class="w-full text-sm text-left text-gray-700">
+            <thead class="bg-gray-200 text-gray-800 border-b border-gray-300">
+                <tr>
+                    <th class="px-5 py-3">Name</th>
+                    <th class="px-5 py-3">Email</th>
+                    <th class="px-5 py-3">Username</th>
+                    <th class="px-5 py-3">Phone</th>
+                    <th class="px-5 py-3">Action</th>
 
-            </tr>
-        </thead>
-        <tbody>
-            {{range .}}
-            <tr>
-                <td>{{.Id}}</td>
-                <td>{{.Name}}</td>
-                <td>{{.Email}}</td>
-                <td>{{.Username}}</td>
-                <td>{{.Phone}}</td>
-                <td>
-                    <form action="/delete/user/{{.Id}}" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Want to delete this user?');">Delete</button>
-                    </form>
-                    <form action="/update/user/{{.Id}}" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Want to edit this user?');">
-                            Edit
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .}}
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                    <td class="px-5 py-3">{{.Name}}</td>
+                    <td class="px-5 py-3">{{.Email}}</td>
+                    <td class="px-5 py-3">{{.Username}}</td>
+                    <td class="px-5 py-3">{{.Phone}}</td>
+                    <td class="px-5 py-3">
+                        <form action="/delete/user/{{.Id}}" method="POST" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Want to delete this user?');"><i
+                                    class="fa fa-trash-o" style="font-size:24px"></i></button>
+                        </form>
+                        <form action="/update/user/{{.Id}}" method="POST" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Want to edit this user?');">
+                                <i class="fa fa-edit" style="font-size:24px"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
     {{ end }}
 </body>
 
