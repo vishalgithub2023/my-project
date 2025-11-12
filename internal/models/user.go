@@ -1,21 +1,3 @@
-// package models
-
-// type User struct {
-// 	Id       int
-// 	Name     string
-// 	Email    string
-// 	Username string
-// 	Password string
-// 	Phone    string
-// }
-
-// type Post struct {
-// 	Id      int
-// 	User_Id int
-// 	Title   string
-// 	Content string
-// }
-
 package models
 
 type User struct {

@@ -24,8 +24,8 @@ func RegisterRoutes(r *mux.Router, db *sql.DB) {
 	r.HandleFunc("/get_all_users", userController.GetUsers).Methods("GET")
 
 	// User Routes
-	r.HandleFunc("/update/user/{id}", userController.UpdateUser).Methods("PUT")
 	// r.HandleFunc("/delete/user/{id}", userController.AuthMiddleware(userController.DeleteUser)).Methods("POST")
+	r.HandleFunc("/update/user/{id}", userController.UpdateUser).Methods("PUT")
 	r.HandleFunc("/delete/user/{id}", userController.DeleteUser).Methods("POST")
 
 	// Post Route
